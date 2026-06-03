@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Annotation profile for blind-box-server" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.32/lombok-1.18.32.jar" />
+        </processorPath>
+        <module name="blind-box-infra" />
+        <module name="blind-box-module-play" />
+        <module name="blind-box-module-product" />
+        <module name="blind-box-admin" />
+        <module name="blind-box-app" />
+        <module name="blind-box-common" />
+        <module name="blind-box-module-content" />
+        <module name="blind-box-module-asset" />
+        <module name="blind-box-module-user" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>

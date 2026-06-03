@@ -1,0 +1,7 @@
+com\damochaohe\app\BlindBoxAppApplication.class
+com\damochaohe\app\config\AppSecurityConfig.class
+com\damochaohe\app\config\OpenApiConfig.class
+com\damochaohe\app\controller\AuthController.class
+com\damochaohe\app\controller\UserController.class
+com\damochaohe\app\controller\AssetController.class
+com\damochaohe\app\controller\HomeController.class

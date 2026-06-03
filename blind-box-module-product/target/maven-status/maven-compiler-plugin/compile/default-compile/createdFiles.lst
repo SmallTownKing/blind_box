@@ -1,0 +1,12 @@
+com\damochaohe\product\mapper\ProductSpuMapper.class
+com\damochaohe\product\dto\AdminProductResponse$AdminProductResponseBuilder.class
+com\damochaohe\product\dto\AdminProductResponse.class
+com\damochaohe\product\entity\ProductCategoryEntity.class
+com\damochaohe\product\service\AdminProductManageService.class
+com\damochaohe\product\mapper\ProductCategoryMapper.class
+com\damochaohe\product\entity\ProductSpuEntity.class
+com\damochaohe\product\dto\AdminCategoryResponse.class
+com\damochaohe\product\dto\AdminProductSaveRequest.class
+com\damochaohe\product\dto\AdminCategorySaveRequest.class
+com\damochaohe\product\service\impl\AdminProductManageServiceImpl.class
+com\damochaohe\product\dto\AdminCategoryResponse$AdminCategoryResponseBuilder.class

@@ -1,0 +1,4 @@
+com\damochaohe\asset\dto\AssetOverviewResponse$AssetOverviewResponseBuilder.class
+com\damochaohe\asset\service\impl\AssetQueryServiceImpl.class
+com\damochaohe\asset\service\AssetQueryService.class
+com\damochaohe\asset\dto\AssetOverviewResponse.class
