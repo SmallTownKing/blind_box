@@ -15,7 +15,6 @@ import com.damochaohe.play.dto.AdminPlayPoolSaveRequest;
 import com.damochaohe.play.dto.AdminPlayPoolRewardStatusRequest;
 import com.damochaohe.play.dto.AdminPlayPoolStatusRequest;
 import com.damochaohe.play.service.AdminPlayPoolManageService;
-import com.damochaohe.play.service.AdminPlayPoolExtraWriteService;
 import com.damochaohe.play.service.AdminPlayPoolWriteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -42,7 +41,6 @@ public class AdminPlayPoolController {
 
     private final AdminPlayPoolManageService adminPlayPoolManageService;
     private final AdminPlayPoolWriteService adminPlayPoolWriteService;
-    private final AdminPlayPoolExtraWriteService adminPlayPoolExtraWriteService;
 
     @GetMapping("/list")
     @Operation(summary = "查询奖池配置列表")
@@ -116,14 +114,14 @@ public class AdminPlayPoolController {
     @PostMapping("/fukubukuro-rule/status")
     @Operation(summary = "修改福袋玩法规则状态")
     public ApiResponse<Void> updateFukubukuroRuleStatus(@Valid @RequestBody AdminFukubukuroRuleStatusRequest request) {
-        adminPlayPoolExtraWriteService.updateFukubukuroRuleStatus(request.getId(), request.getStatus());
+        adminPlayPoolWriteService.updateFukubukuroRuleStatus(request.getId(), request.getStatus());
         return ApiResponse.success(null);
     }
 
     @PostMapping("/fukubukuro-rule/delete")
     @Operation(summary = "删除福袋玩法规则")
     public ApiResponse<Void> deleteFukubukuroRule(@Valid @RequestBody IdRequest request) {
-        adminPlayPoolExtraWriteService.deleteFukubukuroRule(request.getId());
+        adminPlayPoolWriteService.deleteFukubukuroRule(request.getId());
         return ApiResponse.success(null);
     }
 
@@ -144,14 +142,14 @@ public class AdminPlayPoolController {
     @PostMapping("/hundred-draw-config/status")
     @Operation(summary = "修改百连抽页面配置状态")
     public ApiResponse<Void> updateHundredDrawConfigStatus(@Valid @RequestBody AdminHundredDrawStatusRequest request) {
-        adminPlayPoolExtraWriteService.updateHundredDrawConfigStatus(request.getId(), request.getStatus());
+        adminPlayPoolWriteService.updateHundredDrawConfigStatus(request.getId(), request.getStatus());
         return ApiResponse.success(null);
     }
 
     @PostMapping("/hundred-draw-config/delete")
     @Operation(summary = "删除百连抽页面配置")
     public ApiResponse<Void> deleteHundredDrawConfig(@Valid @RequestBody IdRequest request) {
-        adminPlayPoolExtraWriteService.deleteHundredDrawConfig(request.getId());
+        adminPlayPoolWriteService.deleteHundredDrawConfig(request.getId());
         return ApiResponse.success(null);
     }
 }

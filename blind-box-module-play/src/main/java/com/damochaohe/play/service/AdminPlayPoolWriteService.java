@@ -34,4 +34,34 @@ public interface AdminPlayPoolWriteService {
      * @param status 状态
      */
     void updateRewardStatus(Long id, Integer status);
+
+    /**
+     * 删除福袋玩法规则。
+     *
+     * @param id 规则 ID
+     */
+    void deleteFukubukuroRule(Long id);
+
+    /**
+     * 修改福袋玩法规则状态。
+     *
+     * @param id 规则 ID
+     * @param status 状态
+     */
+    void updateFukubukuroRuleStatus(Long id, Integer status);
+
+    /**
+     * 删除百连抽页面配置。
+     *
+     * @param id 配置 ID
+     */
+    void deleteHundredDrawConfig(Long id);
+
+    /**
+     * 修改百连抽页面配置状态。
+     *
+     * @param id 配置 ID
+     * @param status 状态
+     */
+    void updateHundredDrawConfigStatus(Long id, Integer status);
 }

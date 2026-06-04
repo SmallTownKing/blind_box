@@ -2,8 +2,12 @@ package com.damochaohe.play.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.damochaohe.common.exception.BusinessException;
+import com.damochaohe.play.entity.FukubukuroRuleEntity;
+import com.damochaohe.play.entity.HundredDrawConfigEntity;
 import com.damochaohe.play.entity.PlayPoolEntity;
 import com.damochaohe.play.entity.PlayPoolRewardEntity;
+import com.damochaohe.play.mapper.FukubukuroRuleMapper;
+import com.damochaohe.play.mapper.HundredDrawConfigMapper;
 import com.damochaohe.play.mapper.PlayPoolMapper;
 import com.damochaohe.play.mapper.PlayPoolRewardMapper;
 import com.damochaohe.play.service.AdminPlayPoolWriteService;
@@ -22,6 +26,8 @@ public class AdminPlayPoolWriteServiceImpl implements AdminPlayPoolWriteService 
 
     private final PlayPoolMapper playPoolMapper;
     private final PlayPoolRewardMapper playPoolRewardMapper;
+    private final FukubukuroRuleMapper fukubukuroRuleMapper;
+    private final HundredDrawConfigMapper hundredDrawConfigMapper;
 
     @Override
     public void deletePool(Long id) {
@@ -63,6 +69,44 @@ public class AdminPlayPoolWriteServiceImpl implements AdminPlayPoolWriteService 
         entity.setStatus(status);
         playPoolRewardMapper.updateById(entity);
         validateProbabilityTotal(entity.getPoolId());
+    }
+
+    @Override
+    public void deleteFukubukuroRule(Long id) {
+        FukubukuroRuleEntity entity = fukubukuroRuleMapper.selectById(id);
+        if (entity == null) {
+            throw new BusinessException("福袋玩法规则不存在");
+        }
+        fukubukuroRuleMapper.deleteById(id);
+    }
+
+    @Override
+    public void updateFukubukuroRuleStatus(Long id, Integer status) {
+        FukubukuroRuleEntity entity = fukubukuroRuleMapper.selectById(id);
+        if (entity == null) {
+            throw new BusinessException("福袋玩法规则不存在");
+        }
+        entity.setStatus(status);
+        fukubukuroRuleMapper.updateById(entity);
+    }
+
+    @Override
+    public void deleteHundredDrawConfig(Long id) {
+        HundredDrawConfigEntity entity = hundredDrawConfigMapper.selectById(id);
+        if (entity == null) {
+            throw new BusinessException("百连抽页面配置不存在");
+        }
+        hundredDrawConfigMapper.deleteById(id);
+    }
+
+    @Override
+    public void updateHundredDrawConfigStatus(Long id, Integer status) {
+        HundredDrawConfigEntity entity = hundredDrawConfigMapper.selectById(id);
+        if (entity == null) {
+            throw new BusinessException("百连抽页面配置不存在");
+        }
+        entity.setStatus(status);
+        hundredDrawConfigMapper.updateById(entity);
     }
 
     /**
