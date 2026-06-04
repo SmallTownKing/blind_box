@@ -54,6 +54,7 @@ import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -427,12 +428,17 @@ public class AppPlayServiceImpl implements AppPlayService {
         if (activity == null) {
             return context;
         }
+        validateKujiAudience(userId, activity.getVisibleUserConfig(), "当前用户不可见该一番赏活动");
+        validateKujiAudience(userId, activity.getParticipateUserConfig(), "当前用户不满足该一番赏参与条件");
         context.activityId = activity.getId();
         context.boxRemainStockBeforeDraw = activity.getBoxRemainStock() == null ? 0 : activity.getBoxRemainStock();
+        context.fanGroupJumpUrl = activity.getFanGroupJumpUrl();
+        context.robotEnabled = activity.getRobotEnabled();
 
         KujiTargetRewardEntity targetReward = kujiTargetRewardMapper.selectOne(new LambdaQueryWrapper<KujiTargetRewardEntity>()
                 .eq(KujiTargetRewardEntity::getActivityId, activity.getId())
                 .eq(KujiTargetRewardEntity::getTargetUserId, userId)
+                .eq(KujiTargetRewardEntity::getTargetUserType, 1)
                 .eq(KujiTargetRewardEntity::getStatus, 1)
                 .last("limit 1"));
         if (targetReward != null) {
@@ -497,6 +503,8 @@ public class AppPlayServiceImpl implements AppPlayService {
         if (activity == null) {
             return;
         }
+        validateKujiAudience(userId, activity.getVisibleUserConfig(), "当前用户不可见该一番赏活动");
+        validateKujiAudience(userId, activity.getParticipateUserConfig(), "当前用户不满足该一番赏参与条件");
 
         if (activity.getLockBoxEnabled() != null && activity.getLockBoxEnabled() == 1) {
             KujiLockRecordEntity lockRecord = kujiLockRecordMapper.selectOne(new LambdaQueryWrapper<KujiLockRecordEntity>()
@@ -512,6 +520,7 @@ public class AppPlayServiceImpl implements AppPlayService {
         KujiTargetRewardEntity targetReward = kujiTargetRewardMapper.selectOne(new LambdaQueryWrapper<KujiTargetRewardEntity>()
                 .eq(KujiTargetRewardEntity::getActivityId, activity.getId())
                 .eq(KujiTargetRewardEntity::getTargetUserId, userId)
+                .eq(KujiTargetRewardEntity::getTargetUserType, 1)
                 .eq(KujiTargetRewardEntity::getStatus, 1)
                 .last("limit 1"));
         if (targetReward != null) {
@@ -544,5 +553,25 @@ public class AppPlayServiceImpl implements AppPlayService {
         private String targetRewardTierCode;
         private String finalRewardTierCode;
         private boolean triggerFinalReward;
+        private String fanGroupJumpUrl;
+        private Integer robotEnabled;
+    }
+
+    private void validateKujiAudience(Long userId, String config, String errorMessage) {
+        if (config == null || config.isBlank() || "ALL".equalsIgnoreCase(config.trim())) {
+            return;
+        }
+        String normalized = config.trim().toUpperCase();
+        if (normalized.startsWith("USER:") || normalized.startsWith("USER_ID:")) {
+            String rawIds = config.substring(config.indexOf(':') + 1);
+            boolean matched = Arrays.stream(rawIds.split("[,|]"))
+                    .map(String::trim)
+                    .filter(item -> !item.isBlank())
+                    .anyMatch(item -> item.equals(String.valueOf(userId)));
+            if (matched) {
+                return;
+            }
+        }
+        throw new BusinessException(errorMessage);
     }
 }
