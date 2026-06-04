@@ -2,6 +2,8 @@ package com.damochaohe.user.service;
 
 import com.damochaohe.user.dto.LoginRequest;
 import com.damochaohe.user.dto.LoginResponse;
+import com.damochaohe.user.dto.GuestLoginRequest;
+import com.damochaohe.user.dto.UserProfileUpdateRequest;
 import com.damochaohe.user.dto.UserProfileResponse;
 
 /**
@@ -20,10 +22,27 @@ public interface UserAuthService {
     LoginResponse mobileCodeLogin(LoginRequest request);
 
     /**
+     * 游客登录。
+     *
+     * @param request 游客登录参数
+     * @return 登录结果
+     */
+    LoginResponse guestLogin(GuestLoginRequest request);
+
+    /**
      * 查询当前用户资料。
      *
      * @param userId 用户 ID
      * @return 用户资料
      */
     UserProfileResponse getUserProfile(Long userId);
+
+    /**
+     * 更新用户资料。
+     *
+     * @param userId 用户 ID
+     * @param request 更新参数
+     * @return 更新后的资料
+     */
+    UserProfileResponse updateUserProfile(Long userId, UserProfileUpdateRequest request);
 }

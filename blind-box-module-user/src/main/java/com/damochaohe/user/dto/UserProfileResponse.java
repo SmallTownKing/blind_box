@@ -26,4 +26,10 @@ public class UserProfileResponse {
 
     @Schema(description = "当前会员等级")
     private Integer currentMemberLevel;
+
+    @Schema(description = "注册来源")
+    private String registerSource;
+
+    @Schema(description = "是否游客账号")
+    private Boolean guestUser;
 }

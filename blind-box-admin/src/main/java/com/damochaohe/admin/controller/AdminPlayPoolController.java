@@ -5,7 +5,8 @@ import com.damochaohe.common.model.IdRequest;
 import com.damochaohe.play.dto.AdminPlayPoolResponse;
 import com.damochaohe.play.dto.AdminFukubukuroRuleResponse;
 import com.damochaohe.play.dto.AdminFukubukuroRuleSaveRequest;
-import com.damochaohe.play.dto.AdminFukubukuroRuleStatusRequest;
+import com.damochaohe.play.dto
+        .AdminFukubukuroRuleStatusRequest;
 import com.damochaohe.play.dto.AdminHundredDrawResponse;
 import com.damochaohe.play.dto.AdminHundredDrawSaveRequest;
 import com.damochaohe.play.dto.AdminHundredDrawStatusRequest;

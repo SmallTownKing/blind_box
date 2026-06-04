@@ -22,6 +22,8 @@ public class PlayPoolRewardEntity {
 
     private Long productId;
 
+    private Long kujiTierId;
+
     private String rewardName;
 
     private String rewardLevel;

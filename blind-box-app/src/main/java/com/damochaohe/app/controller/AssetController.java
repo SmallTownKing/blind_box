@@ -1,6 +1,7 @@
 package com.damochaohe.app.controller;
 
 import com.damochaohe.asset.dto.AssetOverviewResponse;
+import com.damochaohe.asset.dto.AssetFlowResponse;
 import com.damochaohe.asset.service.AssetQueryService;
 import com.damochaohe.common.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,5 +26,11 @@ public class AssetController {
     @Operation(summary = "查询用户资产总览")
     public ApiResponse<AssetOverviewResponse> overview() {
         return ApiResponse.success(assetQueryService.getAssetOverview(10001L));
+    }
+
+    @GetMapping("/flows")
+    @Operation(summary = "查询用户资产流水")
+    public ApiResponse<AssetFlowResponse> flows() {
+        return ApiResponse.success(assetQueryService.getAssetFlows(10001L));
     }
 }

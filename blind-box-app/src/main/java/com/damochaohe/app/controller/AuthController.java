@@ -1,6 +1,7 @@
 package com.damochaohe.app.controller;
 
 import com.damochaohe.common.response.ApiResponse;
+import com.damochaohe.user.dto.GuestLoginRequest;
 import com.damochaohe.user.dto.LoginRequest;
 import com.damochaohe.user.dto.LoginResponse;
 import com.damochaohe.user.service.UserAuthService;
@@ -30,5 +31,11 @@ public class AuthController {
     @Operation(summary = "手机号验证码登录")
     public ApiResponse<LoginResponse> mobileCodeLogin(@Valid @RequestBody LoginRequest request) {
         return ApiResponse.success(userAuthService.mobileCodeLogin(request));
+    }
+
+    @PostMapping("/guest/login")
+    @Operation(summary = "游客登录")
+    public ApiResponse<LoginResponse> guestLogin(@Valid @RequestBody GuestLoginRequest request) {
+        return ApiResponse.success(userAuthService.guestLogin(request));
     }
 }

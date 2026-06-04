@@ -1,6 +1,7 @@
 package com.damochaohe.user.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -20,4 +21,8 @@ public class LoginRequest {
     @NotBlank(message = "验证码不能为空")
     @Schema(description = "短信验证码", example = "123456")
     private String code;
+
+    @AssertTrue(message = "请先阅读并同意用户协议与隐私条款")
+    @Schema(description = "是否已阅读并同意用户协议与隐私条款", example = "true")
+    private Boolean agreedToTerms;
 }
