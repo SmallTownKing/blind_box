@@ -36,6 +36,21 @@ public class AdminPlayPoolResponse {
     @Schema(description = "支付方式配置")
     private String payModeConfig;
 
+    @Schema(description = "支付方式展示开关配置")
+    private String payModeSwitchConfig;
+
+    @Schema(description = "抽选按钮配置")
+    private String drawButtonConfig;
+
+    @Schema(description = "激情模式配置")
+    private String passionModeConfig;
+
+    @Schema(description = "是否开启未出超稀有款提示")
+    private Integer noHitRareTipEnabled;
+
+    @Schema(description = "指定中奖配置")
+    private String guaranteeConfig;
+
     @Schema(description = "试玩开关")
     private Integer trialEnabled;
 

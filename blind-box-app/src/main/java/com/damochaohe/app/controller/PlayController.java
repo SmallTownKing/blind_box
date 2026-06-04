@@ -1,5 +1,6 @@
 package com.damochaohe.app.controller;
 
+import com.damochaohe.app.support.AppLoginUserResolver;
 import com.damochaohe.common.response.ApiResponse;
 import com.damochaohe.play.dto.AppDrawRequest;
 import com.damochaohe.play.dto.AppDrawResponse;
@@ -10,6 +11,7 @@ import com.damochaohe.play.service.AppPlayService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,17 +31,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class PlayController {
 
     private final AppPlayService appPlayService;
+    private final AppLoginUserResolver appLoginUserResolver;
 
     @PostMapping("/fukubukuro/draw")
     @Operation(summary = "福袋抽赏")
-    public ApiResponse<AppDrawResponse> drawFukubukuro(@Valid @RequestBody AppDrawRequest request) {
-        return ApiResponse.success(appPlayService.drawFukubukuro(10001L, request));
+    public ApiResponse<AppDrawResponse> drawFukubukuro(HttpServletRequest httpServletRequest,
+                                                       @Valid @RequestBody AppDrawRequest request) {
+        return ApiResponse.success(appPlayService.drawFukubukuro(appLoginUserResolver.currentUserId(httpServletRequest), request));
     }
 
     @PostMapping("/kuji/draw")
     @Operation(summary = "一番赏抽赏")
-    public ApiResponse<AppDrawResponse> drawKuji(@Valid @RequestBody AppDrawRequest request) {
-        return ApiResponse.success(appPlayService.drawKuji(10001L, request));
+    public ApiResponse<AppDrawResponse> drawKuji(HttpServletRequest httpServletRequest,
+                                                 @Valid @RequestBody AppDrawRequest request) {
+        return ApiResponse.success(appPlayService.drawKuji(appLoginUserResolver.currentUserId(httpServletRequest), request));
     }
 
     @GetMapping("/hundred-draw/page")
@@ -51,7 +56,8 @@ public class PlayController {
 
     @PostMapping("/delivery/apply")
     @Operation(summary = "申请提货")
-    public ApiResponse<AppDeliveryApplyResponse> applyDelivery(@Valid @RequestBody AppDeliveryApplyRequest request) {
-        return ApiResponse.success(appPlayService.applyDelivery(10001L, request));
+    public ApiResponse<AppDeliveryApplyResponse> applyDelivery(HttpServletRequest httpServletRequest,
+                                                               @Valid @RequestBody AppDeliveryApplyRequest request) {
+        return ApiResponse.success(appPlayService.applyDelivery(appLoginUserResolver.currentUserId(httpServletRequest), request));
     }
 }

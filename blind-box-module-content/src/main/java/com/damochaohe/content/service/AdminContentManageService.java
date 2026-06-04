@@ -1,8 +1,11 @@
 package com.damochaohe.content.service;
 
 import com.damochaohe.content.dto.AdminBannerConfigResponse;
+import com.damochaohe.content.dto.AdminFloatingWindowConfigResponse;
+import com.damochaohe.content.dto.AdminHomeEntryConfigResponse;
 import com.damochaohe.content.dto.AdminPopupConfigResponse;
 import com.damochaohe.content.dto.AdminSplashConfigResponse;
+import com.damochaohe.content.dto.AdminWinnerTickerConfigResponse;
 
 import java.util.List;
 
@@ -31,4 +34,10 @@ public interface AdminContentManageService {
      * @return 配置列表
      */
     List<AdminSplashConfigResponse> listSplashAds();
+
+    List<AdminHomeEntryConfigResponse> listHomeEntries();
+
+    List<AdminFloatingWindowConfigResponse> listFloatingWindows();
+
+    List<AdminWinnerTickerConfigResponse> listWinnerTickers();
 }

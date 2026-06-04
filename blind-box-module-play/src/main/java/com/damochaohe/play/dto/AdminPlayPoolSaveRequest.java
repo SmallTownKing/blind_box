@@ -43,6 +43,21 @@ public class AdminPlayPoolSaveRequest {
     @Schema(description = "支付方式配置，多个用英文逗号分隔，如 BALANCE,GOLD,MAGIC,COUPON")
     private String payModeConfig;
 
+    @Schema(description = "支付方式展示开关配置，例如 GOLD:0,MAGIC:1,COUPON:1")
+    private String payModeSwitchConfig;
+
+    @Schema(description = "抽选按钮配置，例如 SINGLE:1,FIVE:1,TEN:1,HUNDRED:0")
+    private String drawButtonConfig;
+
+    @Schema(description = "激情模式配置，例如 ENABLED:1,JUMP:/pages/hundred-draw/index")
+    private String passionModeConfig;
+
+    @Schema(description = "是否开启未出超稀有款提示：1是 0否")
+    private Integer noHitRareTipEnabled = 0;
+
+    @Schema(description = "指定中奖配置，例如 USER:10001,REWARD:20001,AFTER:10")
+    private String guaranteeConfig;
+
     @Schema(description = "是否开启试玩：1是 0否")
     private Integer trialEnabled = 0;
 

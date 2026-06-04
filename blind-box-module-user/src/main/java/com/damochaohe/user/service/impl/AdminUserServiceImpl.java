@@ -3,6 +3,8 @@ package com.damochaohe.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.damochaohe.common.model.PageResponse;
+import com.damochaohe.common.exception.BusinessException;
+import com.damochaohe.user.dto.AdminUserDetailResponse;
 import com.damochaohe.user.dto.AdminUserPageResponse;
 import com.damochaohe.user.dto.AdminUserQuery;
 import com.damochaohe.user.entity.UserAccountEntity;
@@ -32,6 +34,13 @@ public class AdminUserServiceImpl implements AdminUserService {
                 .like(query.getNickname() != null && !query.getNickname().isBlank(), UserAccountEntity::getNickname, query.getNickname())
                 .like(query.getMobile() != null && !query.getMobile().isBlank(), UserAccountEntity::getMobile, query.getMobile())
                 .eq(Objects.nonNull(query.getStatus()), UserAccountEntity::getStatus, query.getStatus())
+                .eq(query.getRegisterSource() != null && !query.getRegisterSource().isBlank(), UserAccountEntity::getRegisterSource, query.getRegisterSource())
+                .isNull(Objects.equals(query.getGuestUser(), 1), UserAccountEntity::getMobile)
+                .isNotNull(Objects.equals(query.getGuestUser(), 0), UserAccountEntity::getMobile)
+                .isNotNull(Objects.equals(query.getMobileBound(), 1), UserAccountEntity::getMobile)
+                .isNull(Objects.equals(query.getMobileBound(), 0), UserAccountEntity::getMobile)
+                .isNotNull(Objects.equals(query.getPasswordSet(), 1), UserAccountEntity::getPasswordHash)
+                .isNull(Objects.equals(query.getPasswordSet(), 0), UserAccountEntity::getPasswordHash)
                 .orderByDesc(UserAccountEntity::getId);
 
         Page<UserAccountEntity> page = userAccountMapper.selectPage(new Page<>(query.getPageNum(), query.getPageSize()), wrapper);
@@ -43,13 +52,45 @@ public class AdminUserServiceImpl implements AdminUserService {
                 .records(page.getRecords().stream()
                         .map(item -> AdminUserPageResponse.builder()
                                 .userId(item.getId())
+                                .userNo(item.getUserNo())
                                 .nickname(item.getNickname())
+                                .avatar(item.getAvatar())
                                 .mobile(item.getMobile())
+                                .mobileBound(item.getMobile() != null && !item.getMobile().isBlank())
+                                .email(item.getEmail())
+                                .birthday(item.getBirthday())
+                                .passwordSet(item.getPasswordHash() != null && !item.getPasswordHash().isBlank())
                                 .memberLevel(item.getCurrentMemberLevel())
                                 .status(item.getStatus())
                                 .registerSource(item.getRegisterSource())
+                                .createdAt(item.getCreatedAt())
                                 .build())
                         .collect(Collectors.toList()))
+                .build();
+    }
+
+    @Override
+    public AdminUserDetailResponse getUserDetail(Long userId) {
+        UserAccountEntity entity = userAccountMapper.selectById(userId);
+        if (entity == null) {
+            throw new BusinessException("用户不存在");
+        }
+        return AdminUserDetailResponse.builder()
+                .userId(entity.getId())
+                .userNo(entity.getUserNo())
+                .nickname(entity.getNickname())
+                .avatar(entity.getAvatar())
+                .mobile(entity.getMobile())
+                .mobileBound(entity.getMobile() != null && !entity.getMobile().isBlank())
+                .email(entity.getEmail())
+                .birthday(entity.getBirthday())
+                .birthdayEditable(entity.getBirthday() == null)
+                .passwordSet(entity.getPasswordHash() != null && !entity.getPasswordHash().isBlank())
+                .memberLevel(entity.getCurrentMemberLevel())
+                .status(entity.getStatus())
+                .registerSource(entity.getRegisterSource())
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
                 .build();
     }
 }

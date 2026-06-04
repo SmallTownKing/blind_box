@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -24,6 +25,12 @@ public class UserAccountEntity {
     private String avatar;
 
     private String mobile;
+
+    private String email;
+
+    private LocalDate birthday;
+
+    private String passwordHash;
 
     private Integer status;
 

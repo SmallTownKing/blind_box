@@ -33,6 +33,16 @@ public class PlayPoolEntity {
 
     private String payModeConfig;
 
+    private String payModeSwitchConfig;
+
+    private String drawButtonConfig;
+
+    private String passionModeConfig;
+
+    private Integer noHitRareTipEnabled;
+
+    private String guaranteeConfig;
+
     private Integer trialEnabled;
 
     private Integer animationEnabled;

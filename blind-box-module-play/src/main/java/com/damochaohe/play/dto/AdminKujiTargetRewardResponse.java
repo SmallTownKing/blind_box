@@ -21,6 +21,12 @@ public class AdminKujiTargetRewardResponse {
     @Schema(description = "指定用户 ID")
     private Long targetUserId;
 
+    @Schema(description = "目标用户类型：1真实用户 2机器人")
+    private Integer targetUserType;
+
+    @Schema(description = "机器人标识")
+    private String robotIdentity;
+
     @Schema(description = "奖项层级 ID")
     private Long rewardTierId;
 

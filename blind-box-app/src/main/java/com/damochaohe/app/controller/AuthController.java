@@ -4,6 +4,7 @@ import com.damochaohe.common.response.ApiResponse;
 import com.damochaohe.user.dto.GuestLoginRequest;
 import com.damochaohe.user.dto.LoginRequest;
 import com.damochaohe.user.dto.LoginResponse;
+import com.damochaohe.user.dto.MobilePasswordLoginRequest;
 import com.damochaohe.user.service.UserAuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,6 +32,12 @@ public class AuthController {
     @Operation(summary = "手机号验证码登录")
     public ApiResponse<LoginResponse> mobileCodeLogin(@Valid @RequestBody LoginRequest request) {
         return ApiResponse.success(userAuthService.mobileCodeLogin(request));
+    }
+
+    @PostMapping("/mobile-password/login")
+    @Operation(summary = "手机号密码登录")
+    public ApiResponse<LoginResponse> mobilePasswordLogin(@Valid @RequestBody MobilePasswordLoginRequest request) {
+        return ApiResponse.success(userAuthService.mobilePasswordLogin(request));
     }
 
     @PostMapping("/guest/login")

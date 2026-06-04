@@ -22,6 +22,13 @@ public class AdminKujiTargetRewardSaveRequest {
     @Schema(description = "指定用户 ID")
     private Long targetUserId;
 
+    @NotNull(message = "目标用户类型不能为空")
+    @Schema(description = "目标用户类型：1真实用户 2机器人")
+    private Integer targetUserType;
+
+    @Schema(description = "机器人标识，当 targetUserType=2 时可填写")
+    private String robotIdentity;
+
     @NotNull(message = "奖项层级 ID 不能为空")
     @Schema(description = "奖项层级 ID")
     private Long rewardTierId;

@@ -35,4 +35,19 @@ public class AdminKujiActivityResponse {
 
     @Schema(description = "每用户购买次数限制")
     private Integer purchaseLimit;
+
+    @Schema(description = "机器人开关")
+    private Integer robotEnabled;
+
+    @Schema(description = "机器人展示配置")
+    private String robotDisplayConfig;
+
+    @Schema(description = "进粉丝群跳转链接")
+    private String fanGroupJumpUrl;
+
+    @Schema(description = "可见用户配置")
+    private String visibleUserConfig;
+
+    @Schema(description = "可参与用户配置")
+    private String participateUserConfig;
 }

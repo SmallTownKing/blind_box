@@ -9,6 +9,8 @@ import com.damochaohe.content.mapper.ContentBannerMapper;
 import com.damochaohe.content.mapper.ContentPopupMapper;
 import com.damochaohe.content.mapper.ContentSplashAdMapper;
 import com.damochaohe.content.service.HomeContentService;
+import com.damochaohe.infra.entity.SysDictEntity;
+import com.damochaohe.infra.mapper.SysDictMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,11 @@ public class HomeContentServiceImpl implements HomeContentService {
     private final ContentSplashAdMapper contentSplashAdMapper;
     private final ContentPopupMapper contentPopupMapper;
     private final ContentBannerMapper contentBannerMapper;
+    private final SysDictMapper sysDictMapper;
+
+    private static final String HOME_ENTRY_DICT_TYPE = "home_entry";
+    private static final String HOME_FLOATING_DICT_TYPE = "home_floating";
+    private static final String HOME_WINNER_TICKER_DICT_TYPE = "home_winner_ticker";
 
     @Override
     public HomeConfigResponse getHomeConfig() {
@@ -54,6 +61,31 @@ public class HomeContentServiceImpl implements HomeContentService {
                 .map(this::toDisplayItem)
                 .collect(Collectors.toList());
 
+        List<HomeConfigResponse.HomeEntryItem> entries = listEnabledDictItems(HOME_ENTRY_DICT_TYPE)
+                .stream()
+                .map(item -> HomeConfigResponse.HomeEntryItem.builder()
+                        .name(item.getLabel())
+                        .iconUrl(item.getRemark())
+                        .targetPath(normalizeInternalPath(item.getValue()))
+                        .build())
+                .collect(Collectors.toList());
+
+        List<HomeConfigResponse.HomeDisplayItem> floatingWindows = listEnabledDictItems(HOME_FLOATING_DICT_TYPE)
+                .stream()
+                .map(item -> HomeConfigResponse.HomeDisplayItem.builder()
+                        .id(item.getId())
+                        .title(item.getLabel())
+                        .imageUrl(item.getRemark())
+                        .targetPath(normalizeInternalPath(item.getValue()))
+                        .internalOnly(false)
+                        .build())
+                .collect(Collectors.toList());
+
+        List<String> winnerTickers = listEnabledDictItems(HOME_WINNER_TICKER_DICT_TYPE)
+                .stream()
+                .map(SysDictEntity::getLabel)
+                .collect(Collectors.toList());
+
         return HomeConfigResponse.builder()
                 .splashAd(splashAd == null ? null : HomeConfigResponse.HomeDisplayItem.builder()
                         .id(splashAd.getId())
@@ -64,16 +96,18 @@ public class HomeContentServiceImpl implements HomeContentService {
                         .build())
                 .popups(popups)
                 .banners(banners)
-                .entries(List.of(
+                .entries(entries.isEmpty() ? List.of(
                         HomeConfigResponse.HomeEntryItem.builder().name("星愿集赏").iconUrl("https://static.example.com/icon/star-wish.png").targetPath("/pages/wish/index").build(),
                         HomeConfigResponse.HomeEntryItem.builder().name("福利大厅").iconUrl("https://static.example.com/icon/welfare.png").targetPath("/pages/welfare/index").build(),
-                        HomeConfigResponse.HomeEntryItem.builder().name("加入社群").iconUrl("https://static.example.com/icon/group.png").targetPath("/pages/community/join").build()))
+                        HomeConfigResponse.HomeEntryItem.builder().name("加入社群").iconUrl("https://static.example.com/icon/group.png").targetPath("/pages/community/join").build()) : entries)
+                .floatingWindows(floatingWindows)
                 .showSearchBar(true)
                 .showIpEntry(false)
-                .winnerTickers(List.of(
+                .winnerTickers(winnerTickers.isEmpty() ? List.of(
                         "玩家小潮获得隐藏款手办",
                         "玩家星愿抽中欧皇款赏品",
-                        "玩家盒友获得超稀有奖励"))
+                        "玩家盒友获得超稀有奖励") : winnerTickers)
+                .winnerTickerMoreEnabled(false)
                 .playTabs(List.of(
                         HomeConfigResponse.HomePlayTab.builder().name("福袋玩法").secondary(false).collapsed(false).build(),
                         HomeConfigResponse.HomePlayTab.builder().name("一番赏玩法").secondary(false).collapsed(false).build(),
@@ -110,5 +144,13 @@ public class HomeContentServiceImpl implements HomeContentService {
             return "/pages/home/index";
         }
         return targetPath;
+    }
+
+    private List<SysDictEntity> listEnabledDictItems(String dictType) {
+        return sysDictMapper.selectList(new LambdaQueryWrapper<SysDictEntity>()
+                .eq(SysDictEntity::getDictType, dictType)
+                .eq(SysDictEntity::getStatus, 1)
+                .orderByAsc(SysDictEntity::getSortNo)
+                .orderByDesc(SysDictEntity::getId));
     }
 }

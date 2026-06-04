@@ -42,4 +42,19 @@ public class AdminKujiActivitySaveRequest {
 
     @Schema(description = "排序号")
     private Integer sortNo = 0;
+
+    @Schema(description = "机器人开关：1开启 0关闭")
+    private Integer robotEnabled = 0;
+
+    @Schema(description = "机器人展示配置，例如 ROBOT:1001>1002,ORDER:MANUAL")
+    private String robotDisplayConfig;
+
+    @Schema(description = "进粉丝群跳转链接，支持外部链接/小程序路径")
+    private String fanGroupJumpUrl;
+
+    @Schema(description = "可见用户配置，例如 ALL / LEVEL:V7-V10 / INVITER:ABC123")
+    private String visibleUserConfig;
+
+    @Schema(description = "可参与用户配置，例如 ALL / LEVEL:V7-V10 / REGISTER:2026-01-01")
+    private String participateUserConfig;
 }

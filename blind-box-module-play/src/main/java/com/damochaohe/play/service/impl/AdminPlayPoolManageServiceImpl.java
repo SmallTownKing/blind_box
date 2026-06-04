@@ -54,6 +54,11 @@ public class AdminPlayPoolManageServiceImpl implements AdminPlayPoolManageServic
                         .bannerLandingPage(item.getBannerLandingPage())
                         .drawModeConfig(item.getDrawModeConfig())
                         .payModeConfig(item.getPayModeConfig())
+                        .payModeSwitchConfig(item.getPayModeSwitchConfig())
+                        .drawButtonConfig(item.getDrawButtonConfig())
+                        .passionModeConfig(item.getPassionModeConfig())
+                        .noHitRareTipEnabled(item.getNoHitRareTipEnabled())
+                        .guaranteeConfig(item.getGuaranteeConfig())
                         .trialEnabled(item.getTrialEnabled())
                         .animationEnabled(item.getAnimationEnabled())
                         .build())
@@ -77,6 +82,11 @@ public class AdminPlayPoolManageServiceImpl implements AdminPlayPoolManageServic
         entity.setBannerLandingPage(request.getBannerLandingPage());
         entity.setDrawModeConfig(request.getDrawModeConfig());
         entity.setPayModeConfig(request.getPayModeConfig());
+        entity.setPayModeSwitchConfig(request.getPayModeSwitchConfig());
+        entity.setDrawButtonConfig(request.getDrawButtonConfig());
+        entity.setPassionModeConfig(request.getPassionModeConfig());
+        entity.setNoHitRareTipEnabled(request.getNoHitRareTipEnabled());
+        entity.setGuaranteeConfig(request.getGuaranteeConfig());
         entity.setTrialEnabled(request.getTrialEnabled());
         entity.setAnimationEnabled(request.getAnimationEnabled());
         if (request.getId() == null) {

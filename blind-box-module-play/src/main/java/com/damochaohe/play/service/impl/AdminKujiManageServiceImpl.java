@@ -63,6 +63,11 @@ public class AdminKujiManageServiceImpl implements AdminKujiManageService {
                         .boxTotalStock(item.getBoxTotalStock())
                         .boxRemainStock(item.getBoxRemainStock())
                         .purchaseLimit(item.getPurchaseLimit())
+                        .robotEnabled(item.getRobotEnabled())
+                        .robotDisplayConfig(item.getRobotDisplayConfig())
+                        .fanGroupJumpUrl(item.getFanGroupJumpUrl())
+                        .visibleUserConfig(item.getVisibleUserConfig())
+                        .participateUserConfig(item.getParticipateUserConfig())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -81,6 +86,11 @@ public class AdminKujiManageServiceImpl implements AdminKujiManageService {
         entity.setBoxRemainStock(request.getBoxRemainStock());
         entity.setPurchaseLimit(request.getPurchaseLimit());
         entity.setSortNo(request.getSortNo());
+        entity.setRobotEnabled(request.getRobotEnabled());
+        entity.setRobotDisplayConfig(request.getRobotDisplayConfig());
+        entity.setFanGroupJumpUrl(request.getFanGroupJumpUrl());
+        entity.setVisibleUserConfig(request.getVisibleUserConfig());
+        entity.setParticipateUserConfig(request.getParticipateUserConfig());
         if (request.getId() == null) {
             kujiActivityMapper.insert(entity);
         } else {
@@ -268,6 +278,8 @@ public class AdminKujiManageServiceImpl implements AdminKujiManageService {
                                 .id(item.getId())
                                 .activityId(item.getActivityId())
                                 .targetUserId(item.getTargetUserId())
+                                .targetUserType(item.getTargetUserType())
+                                .robotIdentity(item.getRobotIdentity())
                                 .rewardTierId(item.getRewardTierId())
                                 .specialRewardEnabled(item.getSpecialRewardEnabled())
                                 .status(item.getStatus())
@@ -284,6 +296,8 @@ public class AdminKujiManageServiceImpl implements AdminKujiManageService {
         }
         entity.setActivityId(request.getActivityId());
         entity.setTargetUserId(request.getTargetUserId());
+        entity.setTargetUserType(request.getTargetUserType());
+        entity.setRobotIdentity(request.getRobotIdentity());
         entity.setRewardTierId(request.getRewardTierId());
         entity.setSpecialRewardEnabled(request.getSpecialRewardEnabled());
         entity.setStatus(request.getStatus());

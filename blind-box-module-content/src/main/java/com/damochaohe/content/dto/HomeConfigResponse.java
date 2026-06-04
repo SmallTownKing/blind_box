@@ -26,6 +26,9 @@ public class HomeConfigResponse {
     @Schema(description = "金刚区入口列表")
     private List<HomeEntryItem> entries;
 
+    @Schema(description = "悬浮窗列表")
+    private List<HomeDisplayItem> floatingWindows;
+
     @Schema(description = "是否展示搜索栏")
     private Boolean showSearchBar;
 
@@ -34,6 +37,9 @@ public class HomeConfigResponse {
 
     @Schema(description = "中奖轮播文案列表")
     private List<String> winnerTickers;
+
+    @Schema(description = "中奖轮播是否展示更多入口")
+    private Boolean winnerTickerMoreEnabled;
 
     @Schema(description = "玩法区展示数据")
     private List<HomePlayTab> playTabs;

@@ -21,6 +21,10 @@ public class KujiTargetRewardEntity {
 
     private Long targetUserId;
 
+    private Integer targetUserType;
+
+    private String robotIdentity;
+
     private Long rewardTierId;
 
     private Integer specialRewardEnabled;

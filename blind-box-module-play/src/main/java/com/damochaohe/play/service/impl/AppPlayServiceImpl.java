@@ -44,6 +44,7 @@ import com.damochaohe.play.mapper.PlayPoolRewardMapper;
 import com.damochaohe.play.mapper.PlayTradeOrderMapper;
 import com.damochaohe.play.mapper.WarehouseItemMapper;
 import com.damochaohe.play.service.AppPlayService;
+import com.damochaohe.play.service.CommercialPaymentService;
 import com.damochaohe.play.service.ProbabilityValidationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -72,6 +73,7 @@ public class AppPlayServiceImpl implements AppPlayService {
     private final WarehouseItemMapper warehouseItemMapper;
     private final DeliveryOrderMapper deliveryOrderMapper;
     private final ProbabilityValidationService probabilityValidationService;
+    private final CommercialPaymentService commercialPaymentService;
     private final SecureRandom secureRandom = new SecureRandom();
     private final KujiActivityMapper kujiActivityMapper;
     private final KujiRewardTierMapper kujiRewardTierMapper;
@@ -187,10 +189,17 @@ public class AppPlayServiceImpl implements AppPlayService {
         if (!Boolean.TRUE.equals(validationResult.getPassed())) {
             throw new BusinessException("奖池概率配置校验未通过：" + validationResult.getMessage());
         }
-        applyRealAssetDeduction(assetAccount, totalCost, payModes);
-        userAssetAccountMapper.updateById(assetAccount);
-
         String tradeNo = "TRD" + userId + System.currentTimeMillis();
+        CommercialPaymentService.CommercialPaymentResult paymentResult = commercialPaymentService.consume(
+                userId,
+                totalCost,
+                parsePayTypes(payModes),
+                List.of(),
+                tradeNo
+        );
+        assetAccount = userAssetAccountMapper.selectOne(new LambdaQueryWrapper<UserAssetAccountEntity>()
+                .eq(UserAssetAccountEntity::getUserId, userId)
+                .last("limit 1"));
         PlayTradeOrderEntity tradeOrderEntity = new PlayTradeOrderEntity();
         tradeOrderEntity.setTradeNo(tradeNo);
         tradeOrderEntity.setUserId(userId);
@@ -201,16 +210,6 @@ public class AppPlayServiceImpl implements AppPlayService {
         tradeOrderEntity.setCreatedAt(LocalDateTime.now());
         tradeOrderEntity.setUpdatedAt(LocalDateTime.now());
         playTradeOrderMapper.insert(tradeOrderEntity);
-
-        UserAssetFlowEntity flowEntity = new UserAssetFlowEntity();
-        flowEntity.setUserId(userId);
-        flowEntity.setAssetType(resolvePrimaryAssetType(payModes));
-        flowEntity.setFlowType("EXPENSE");
-        flowEntity.setChangeAmount(totalCost);
-        flowEntity.setBizNo(tradeNo);
-        flowEntity.setRemark("用户抽赏扣款");
-        flowEntity.setCreatedAt(LocalDateTime.now());
-        userAssetFlowMapper.insert(flowEntity);
 
         List<AppDrawRewardItem> resultRewards = new ArrayList<>();
         List<AppWarehouseItemResponse> warehouseItems = new ArrayList<>();
@@ -372,6 +371,16 @@ public class AppPlayServiceImpl implements AppPlayService {
             }
         }
         return rewards.get(rewards.size() - 1);
+    }
+
+    private List<String> parsePayTypes(String payModes) {
+        if (payModes == null || payModes.isBlank()) {
+            return List.of("BALANCE");
+        }
+        return java.util.Arrays.stream(payModes.split(",|\\+"))
+                .map(String::trim)
+                .filter(item -> !item.isBlank())
+                .toList();
     }
 
     private PlayPoolRewardEntity selectReward(List<PlayPoolRewardEntity> rewards, int sequence, KujiExecutionContext context) {

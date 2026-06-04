@@ -33,6 +33,16 @@ public class KujiActivityEntity {
 
     private Integer sortNo;
 
+    private Integer robotEnabled;
+
+    private String robotDisplayConfig;
+
+    private String fanGroupJumpUrl;
+
+    private String visibleUserConfig;
+
+    private String participateUserConfig;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

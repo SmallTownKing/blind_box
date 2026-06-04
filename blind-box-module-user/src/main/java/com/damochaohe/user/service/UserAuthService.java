@@ -2,7 +2,10 @@ package com.damochaohe.user.service;
 
 import com.damochaohe.user.dto.LoginRequest;
 import com.damochaohe.user.dto.LoginResponse;
+import com.damochaohe.user.dto.MobilePasswordLoginRequest;
 import com.damochaohe.user.dto.GuestLoginRequest;
+import com.damochaohe.user.dto.UserBindMobileRequest;
+import com.damochaohe.user.dto.UserPasswordUpdateRequest;
 import com.damochaohe.user.dto.UserProfileUpdateRequest;
 import com.damochaohe.user.dto.UserProfileResponse;
 
@@ -22,6 +25,14 @@ public interface UserAuthService {
     LoginResponse mobileCodeLogin(LoginRequest request);
 
     /**
+     * 手机号密码登录。
+     *
+     * @param request 登录参数
+     * @return 登录结果
+     */
+    LoginResponse mobilePasswordLogin(MobilePasswordLoginRequest request);
+
+    /**
      * 游客登录。
      *
      * @param request 游客登录参数
@@ -38,6 +49,15 @@ public interface UserAuthService {
     UserProfileResponse getUserProfile(Long userId);
 
     /**
+     * 绑定手机号。
+     *
+     * @param userId 用户 ID
+     * @param request 绑定参数
+     * @return 更新后的资料
+     */
+    UserProfileResponse bindMobile(Long userId, UserBindMobileRequest request);
+
+    /**
      * 更新用户资料。
      *
      * @param userId 用户 ID
@@ -45,4 +65,12 @@ public interface UserAuthService {
      * @return 更新后的资料
      */
     UserProfileResponse updateUserProfile(Long userId, UserProfileUpdateRequest request);
+
+    /**
+     * 设置或修改登录密码。
+     *
+     * @param userId 用户 ID
+     * @param request 密码参数
+     */
+    void updatePassword(Long userId, UserPasswordUpdateRequest request);
 }
