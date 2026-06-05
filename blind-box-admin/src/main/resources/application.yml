@@ -37,6 +37,6 @@ springdoc:
 
 security:
   jwt:
-    secret: change-me-to-production-secret
+    secret: change-me-to-production-secret-key-at-least-32-bytes
     expire-seconds: 604800
 

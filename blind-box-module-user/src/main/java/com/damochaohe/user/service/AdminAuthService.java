@@ -22,5 +22,5 @@ public interface AdminAuthService {
      *
      * @return 权限数据
      */
-    AdminPermissionResponse getPermissionInfo();
+    AdminPermissionResponse getPermissionInfo(Long adminUserId);
 }

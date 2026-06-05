@@ -26,4 +26,10 @@ public class AppHundredDrawPageResponse {
 
     @Schema(description = "Banner 图")
     private String bannerUrl;
+
+    @Schema(description = "进粉丝群跳转链接")
+    private String fanGroupJumpUrl;
+
+    @Schema(description = "是否开启机器人展示")
+    private Integer robotEnabled;
 }

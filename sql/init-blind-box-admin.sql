@@ -88,10 +88,24 @@ CREATE TABLE IF NOT EXISTS user_account (
     KEY idx_user_account_mobile (mobile)
 ) COMMENT='用户基础表';
 
-ALTER TABLE user_account
-    ADD COLUMN IF NOT EXISTS email VARCHAR(128) DEFAULT NULL COMMENT '邮箱' AFTER mobile,
-    ADD COLUMN IF NOT EXISTS birthday DATE DEFAULT NULL COMMENT '生日，仅允许首次设置' AFTER email,
-    ADD COLUMN IF NOT EXISTS password_hash VARCHAR(255) DEFAULT NULL COMMENT '登录密码哈希' AFTER birthday;
+CREATE TABLE IF NOT EXISTS member_level_config (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '会员等级配置 ID',
+    level_no INT NOT NULL COMMENT '等级编号',
+    level_name VARCHAR(32) NOT NULL COMMENT '等级名称',
+    consume_threshold DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '消费门槛',
+    growth_threshold DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '成长值门槛',
+    reward_config VARCHAR(1000) DEFAULT NULL COMMENT '奖励配置',
+    v10_protect_enabled TINYINT NOT NULL DEFAULT 0 COMMENT 'V10保护开关',
+    v10_protect_threshold DECIMAL(10,2) DEFAULT NULL COMMENT 'V10保护门槛',
+    status TINYINT NOT NULL DEFAULT 1 COMMENT '状态',
+    sort_no INT NOT NULL DEFAULT 0 COMMENT '排序号',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) COMMENT='会员等级配置表';
+
+-- 兼容说明：以下 ALTER 语句在部分 MySQL 版本不支持 ADD COLUMN IF NOT EXISTS。
+-- 当前初始化脚本中的 CREATE TABLE 已包含最新字段，因此全新建库初始化时无需执行这些 ALTER。
+-- 如需对旧库升级，请按实际缺失字段手动执行普通 ADD COLUMN。
 
 -- ---------------------------------------------
 -- 3. 首页内容配置
@@ -157,12 +171,12 @@ CREATE TABLE IF NOT EXISTS play_pool (
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) COMMENT='奖池基础配置表';
 
-ALTER TABLE play_pool
-    ADD COLUMN IF NOT EXISTS pay_mode_switch_config VARCHAR(255) DEFAULT NULL COMMENT '支付方式展示开关配置' AFTER pay_mode_config,
-    ADD COLUMN IF NOT EXISTS draw_button_config VARCHAR(255) DEFAULT NULL COMMENT '抽选按钮配置' AFTER pay_mode_switch_config,
-    ADD COLUMN IF NOT EXISTS passion_mode_config VARCHAR(255) DEFAULT NULL COMMENT '激情模式配置' AFTER draw_button_config,
-    ADD COLUMN IF NOT EXISTS no_hit_rare_tip_enabled TINYINT NOT NULL DEFAULT 0 COMMENT '是否开启未出超稀有款提示' AFTER passion_mode_config,
-    ADD COLUMN IF NOT EXISTS guarantee_config VARCHAR(255) DEFAULT NULL COMMENT '指定中奖配置' AFTER no_hit_rare_tip_enabled;
+-- 旧库升级时如缺字段，请手动执行：
+-- ALTER TABLE play_pool ADD COLUMN pay_mode_switch_config VARCHAR(255) DEFAULT NULL COMMENT '支付方式展示开关配置';
+-- ALTER TABLE play_pool ADD COLUMN draw_button_config VARCHAR(255) DEFAULT NULL COMMENT '抽选按钮配置';
+-- ALTER TABLE play_pool ADD COLUMN passion_mode_config VARCHAR(255) DEFAULT NULL COMMENT '激情模式配置';
+-- ALTER TABLE play_pool ADD COLUMN no_hit_rare_tip_enabled TINYINT NOT NULL DEFAULT 0 COMMENT '是否开启未出超稀有款提示';
+-- ALTER TABLE play_pool ADD COLUMN guarantee_config VARCHAR(255) DEFAULT NULL COMMENT '指定中奖配置';
 
 CREATE TABLE IF NOT EXISTS fukubukuro_rule (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '福袋玩法规则 ID',
@@ -202,8 +216,8 @@ CREATE TABLE IF NOT EXISTS play_pool_reward (
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) COMMENT='奖池奖品项配置表';
 
-ALTER TABLE play_pool_reward
-    ADD COLUMN IF NOT EXISTS kuji_tier_id BIGINT DEFAULT NULL COMMENT '关联一番赏奖项层级 ID';
+-- 旧库升级时如缺字段，请手动执行：
+-- ALTER TABLE play_pool_reward ADD COLUMN kuji_tier_id BIGINT DEFAULT NULL COMMENT '关联一番赏奖项层级 ID';
 
 CREATE TABLE IF NOT EXISTS kuji_activity (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '一番赏活动 ID',
@@ -224,12 +238,12 @@ CREATE TABLE IF NOT EXISTS kuji_activity (
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) COMMENT='一番赏活动配置表';
 
-ALTER TABLE kuji_activity
-    ADD COLUMN IF NOT EXISTS robot_enabled TINYINT NOT NULL DEFAULT 0 COMMENT '机器人开关：1开启 0关闭' AFTER sort_no,
-    ADD COLUMN IF NOT EXISTS robot_display_config VARCHAR(255) DEFAULT NULL COMMENT '机器人展示配置' AFTER robot_enabled,
-    ADD COLUMN IF NOT EXISTS fan_group_jump_url VARCHAR(255) DEFAULT NULL COMMENT '进粉丝群跳转链接' AFTER robot_display_config,
-    ADD COLUMN IF NOT EXISTS visible_user_config VARCHAR(255) DEFAULT NULL COMMENT '可见用户配置' AFTER fan_group_jump_url,
-    ADD COLUMN IF NOT EXISTS participate_user_config VARCHAR(255) DEFAULT NULL COMMENT '可参与用户配置' AFTER visible_user_config;
+-- 旧库升级时如缺字段，请手动执行：
+-- ALTER TABLE kuji_activity ADD COLUMN robot_enabled TINYINT NOT NULL DEFAULT 0 COMMENT '机器人开关：1开启 0关闭';
+-- ALTER TABLE kuji_activity ADD COLUMN robot_display_config VARCHAR(255) DEFAULT NULL COMMENT '机器人展示配置';
+-- ALTER TABLE kuji_activity ADD COLUMN fan_group_jump_url VARCHAR(255) DEFAULT NULL COMMENT '进粉丝群跳转链接';
+-- ALTER TABLE kuji_activity ADD COLUMN visible_user_config VARCHAR(255) DEFAULT NULL COMMENT '可见用户配置';
+-- ALTER TABLE kuji_activity ADD COLUMN participate_user_config VARCHAR(255) DEFAULT NULL COMMENT '可参与用户配置';
 
 CREATE TABLE IF NOT EXISTS kuji_reward_tier (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '奖项层级 ID',
@@ -281,9 +295,9 @@ CREATE TABLE IF NOT EXISTS kuji_target_reward (
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) COMMENT='一番赏指定中奖与特殊赏配置表';
 
-ALTER TABLE kuji_target_reward
-    ADD COLUMN IF NOT EXISTS target_user_type TINYINT NOT NULL DEFAULT 1 COMMENT '目标用户类型：1真实用户 2机器人' AFTER target_user_id,
-    ADD COLUMN IF NOT EXISTS robot_identity VARCHAR(64) DEFAULT NULL COMMENT '机器人标识' AFTER target_user_type;
+-- 旧库升级时如缺字段，请手动执行：
+-- ALTER TABLE kuji_target_reward ADD COLUMN target_user_type TINYINT NOT NULL DEFAULT 1 COMMENT '目标用户类型：1真实用户 2机器人';
+-- ALTER TABLE kuji_target_reward ADD COLUMN robot_identity VARCHAR(64) DEFAULT NULL COMMENT '机器人标识';
 
 CREATE TABLE IF NOT EXISTS content_popup (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键 ID',
@@ -347,7 +361,11 @@ VALUES
 ('system:content:view', '查看首页内容', 'API', 0, '/api/admin/content/**', 1, 3),
 ('system:content:edit', '编辑首页内容', 'API', 0, '/api/admin/content/**', 1, 4),
 ('system:dict:view', '查看字典', 'API', 0, '/api/admin/system/dict/items', 1, 5),
-('system:dict:edit', '编辑字典', 'API', 0, '/api/admin/system/dict/**', 1, 6)
+('system:dict:edit', '编辑字典', 'API', 0, '/api/admin/system/dict/**', 1, 6),
+('system:coupon:view', '查看优惠券', 'API', 0, '/api/admin/coupons/templates', 1, 7),
+('system:coupon:edit', '编辑优惠券', 'API', 0, '/api/admin/coupons/**', 1, 8),
+('system:play:view', '查看玩法', 'API', 0, '/api/admin/play-records/**', 1, 9),
+('system:play:edit', '编辑玩法', 'API', 0, '/api/admin/play-pools/**', 1, 10)
 ON DUPLICATE KEY UPDATE updated_at = CURRENT_TIMESTAMP;
 
 INSERT INTO admin_user_role (admin_user_id, role_id)
@@ -366,6 +384,13 @@ INSERT INTO user_account (user_no, nickname, avatar, mobile, status, register_so
 VALUES
 ('U10001', '潮盒玩家A', 'https://static.example.com/avatar/a.png', '13800138000', 1, 'APP', 7),
 ('U10002', '潮盒玩家B', 'https://static.example.com/avatar/b.png', '13900139000', 1, '小程序', 3)
+ON DUPLICATE KEY UPDATE updated_at = CURRENT_TIMESTAMP;
+
+INSERT INTO member_level_config (level_no, level_name, consume_threshold, growth_threshold, reward_config, v10_protect_enabled, v10_protect_threshold, status, sort_no)
+VALUES
+(1, 'VIP1', 100.00, 100.00, '{"coupon":"新手券"}', 0, NULL, 1, 1),
+(7, 'VIP7', 5000.00, 5000.00, '{"goldDeduct":true}', 0, NULL, 1, 7),
+(10, 'VIP10', 100000.00, 100000.00, '{"exclusive":"大魔卡资格"}', 1, 50000.00, 1, 10)
 ON DUPLICATE KEY UPDATE updated_at = CURRENT_TIMESTAMP;
 
 INSERT INTO content_banner (title, image_url, target_path, status, sort_no)

@@ -96,6 +96,10 @@ public class AppPlayServiceImpl implements AppPlayService {
 
     @Override
     public AppHundredDrawPageResponse getHundredDrawPage(Long poolId) {
+        KujiActivityEntity kujiActivity = kujiActivityMapper.selectOne(new LambdaQueryWrapper<KujiActivityEntity>()
+                .eq(KujiActivityEntity::getId, poolId)
+                .eq(KujiActivityEntity::getStatus, 1)
+                .last("limit 1"));
         HundredDrawConfigEntity entity = hundredDrawConfigMapper.selectList(new LambdaQueryWrapper<HundredDrawConfigEntity>()
                         .eq(HundredDrawConfigEntity::getPoolId, poolId)
                         .eq(HundredDrawConfigEntity::getStatus, 1)
@@ -110,6 +114,8 @@ public class AppPlayServiceImpl implements AppPlayService {
                     .pageTitle("百连抽")
                     .pageSubtitle("当前奖池暂未配置百连抽页面，使用默认展示")
                     .bannerUrl("https://static.example.com/banner/hundred-draw-default.png")
+                    .fanGroupJumpUrl(kujiActivity == null ? null : kujiActivity.getFanGroupJumpUrl())
+                    .robotEnabled(kujiActivity == null ? 0 : kujiActivity.getRobotEnabled())
                     .build();
         }
         return AppHundredDrawPageResponse.builder()
@@ -118,6 +124,8 @@ public class AppPlayServiceImpl implements AppPlayService {
                 .pageTitle(entity.getPageTitle())
                 .pageSubtitle(entity.getPageSubtitle())
                 .bannerUrl(entity.getBannerUrl())
+                .fanGroupJumpUrl(kujiActivity == null ? null : kujiActivity.getFanGroupJumpUrl())
+                .robotEnabled(kujiActivity == null ? 0 : kujiActivity.getRobotEnabled())
                 .build();
     }
 
@@ -301,6 +309,8 @@ public class AppPlayServiceImpl implements AppPlayService {
                         .amount(totalCost)
                         .build()))
                 .resultSummary(summaryPrefix + "，共获得 " + resultRewards.size() + " 件奖品，已完成真实扣款与入仓")
+                .fanGroupJumpUrl(kujiExecutionContext == null ? null : kujiExecutionContext.fanGroupJumpUrl)
+                .robotEnabled(kujiExecutionContext == null ? 0 : kujiExecutionContext.robotEnabled)
                 .build();
     }
 

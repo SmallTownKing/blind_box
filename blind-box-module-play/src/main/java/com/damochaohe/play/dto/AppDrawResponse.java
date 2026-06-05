@@ -48,4 +48,10 @@ public class AppDrawResponse {
 
     @Schema(description = "结果摘要")
     private String resultSummary;
+
+    @Schema(description = "进粉丝群跳转链接，一番赏场景返回")
+    private String fanGroupJumpUrl;
+
+    @Schema(description = "是否开启机器人展示，一番赏场景返回")
+    private Integer robotEnabled;
 }
